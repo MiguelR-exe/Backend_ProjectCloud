@@ -1,9 +1,16 @@
 import json
 import os
+from decimal import Decimal
 import boto3
 
 dynamodb = boto3.resource("dynamodb")
 tabla = dynamodb.Table(os.environ.get("PRODUCTS_TABLE", "ms-catalog-products-dev"))
+
+
+def decimal_a_num(obj):
+    if isinstance(obj, Decimal):
+        return int(obj) if obj % 1 == 0 else float(obj)
+    raise TypeError
 
 
 def respond(status, body):
@@ -13,7 +20,7 @@ def respond(status, body):
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
         },
-        "body": json.dumps(body, ensure_ascii=False),
+        "body": json.dumps(body, ensure_ascii=False, default=decimal_a_num),
     }
 
 
