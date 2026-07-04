@@ -104,3 +104,57 @@ madamtusan-backend/
     ├── completeStep.py
     └── callRappi.py
 ```
+
+## Endpoints de la API
+ 
+Todos cuelgan de la Invoke URL de API Gateway (base: `https://TU-URL/dev`).
+ 
+| Método | Ruta | Microservicio | Qué hace |
+|--------|------|---------------|----------|
+| GET  | `/products`              | catalog  | Lista todo el menú |
+| GET  | `/products/{id}`         | catalog  | Devuelve un plato por su id |
+| POST | `/orders`                | orders   | Crea un pedido |
+| GET  | `/orders`                | orders   | Lista los pedidos |
+| GET  | `/orders/{id}`           | orders   | Consulta un pedido por su id |
+| POST | `/orders/{id}/complete`  | workflow | El trabajador completa el paso actual |
+ 
+### Ejemplos
+ 
+Listar el menú:
+```bash
+curl https://TU-URL/dev/products
+```
+ 
+Crear un pedido:
+```bash
+curl -X POST https://TU-URL/dev/orders \
+  -H "Content-Type: application/json" \
+  -d '{"cliente":"Juan","items":["Chaufa"],"origen":"web"}'
+```
+ 
+Consultar un pedido:
+```bash
+curl "https://TU-URL/dev/orders/abc-123?tenant_id=madamtusan"
+```
+ 
+Completar el paso actual de un pedido (rol trabajador):
+```bash
+curl -X POST https://TU-URL/dev/orders/abc-123/complete \
+  -H "Content-Type: application/json" \
+  -d '{"atendido_por":"Carlos","tenant_id":"madamtusan"}'
+```
+ 
+### Lambdas internas (sin endpoint)
+ 
+Estas no se llaman por URL; las dispara el propio sistema:
+ 
+- `startWorkflow` — la dispara EventBridge al crearse un pedido
+- `registrarPaso` — la invoca Step Functions en cada paso (guarda el task token)
+- `callRappi` — la invoca Step Functions para notificar el estado a OCI (Rappi)
+### Poblar el catálogo
+ 
+Tras el primer deploy la tabla Products está vacía. Cárgala con:
+```bash
+pip install boto3
+python seed_products.py
+```
