@@ -81,6 +81,10 @@ curl https://TU-URL/dev/orders
 ```bash
 serverless remove
 ```
+## Link del Draw.io
+```
+https://drive.google.com/file/d/1fDxnwWycKn_A14xPeyTsMr4YApCPg16-/view?usp=sharing
+```
 
 ## Estructura del proyecto
 
