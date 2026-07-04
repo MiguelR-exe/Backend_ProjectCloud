@@ -28,31 +28,31 @@ package:
 functions:
   # ---------- ms-catalog ----------
   listProducts:
-    handler: handlers/catalog.list_products
+    handler: handlers/listProducts.lambda_handler
     events:
       - http: { path: products, method: get, cors: true }
   getProduct:
-    handler: handlers/catalog.get_product
+    handler: handlers/getProduct.lambda_handler
     events:
       - http: { path: products/{id}, method: get, cors: true }
 
   # ---------- ms-orders ----------
   createOrder:
-    handler: handlers/orders.create_order
+    handler: handlers/createOrder.lambda_handler
     events:
       - http: { path: orders, method: post, cors: true }
   getOrder:
-    handler: handlers/orders.get_order
+    handler: handlers/getOrder.lambda_handler
     events:
       - http: { path: orders/{id}, method: get, cors: true }
   listOrders:
-    handler: handlers/orders.list_orders
+    handler: handlers/listOrders.lambda_handler
     events:
       - http: { path: orders, method: get, cors: true }
 
   # ---------- ms-workflow ----------
   startWorkflow:
-    handler: handlers/workflow.start_workflow
+    handler: handlers/startWorkflow.lambda_handler
     events:
       - eventBridge:
           pattern:
@@ -61,13 +61,13 @@ functions:
             detail-type:
               - PedidoCreado
   registrarPaso:
-    handler: handlers/workflow.registrar_paso
+    handler: handlers/registrarPaso.lambda_handler
   completeStep:
-    handler: handlers/workflow.complete_step
+    handler: handlers/completeStep.lambda_handler
     events:
       - http: { path: orders/{id}/complete, method: post, cors: true }
   callRappi:
-    handler: handlers/workflow.call_rappi
+    handler: handlers/callRappi.lambda_handler
 
 stepFunctions:
   stateMachines:
